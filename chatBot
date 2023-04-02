@@ -1,0 +1,109 @@
+#Purpose: Discord Chat Bot
+#Author: Rokawoo Woof
+#Last Updated: 3/20/2023
+
+import os
+import discord
+import openai
+import asyncio
+from discord.ext import commands
+from discord_webhook import DiscordWebhook
+
+# Retrieve the personality model to use from an environment variable
+personality = '''put desired personality here'''
+
+# Create a new Discord bot instance with the necessary intents enabled
+intents = discord.Intents.default()
+intents.members = True
+intents.message_content = True  # Explicitly enable the message content intents
+bot = commands.Bot(command_prefix='', intents=intents)
+
+openai.api_key = 'put your openAI api key here'  # Set up the OpenAI API key
+
+chatHistory = []
+
+
+# Event handler for when the bot connects to Discord
+@bot.event
+async def on_ready():
+  print(f'{bot.user} has connected to Discord!')
+
+  # Set the bot's status
+  activity = discord.Activity(
+    type=discord.ActivityType.playing,
+    name=
+    '''put bot's status here'''
+  )
+  await bot.change_presence(activity=activity, status=discord.Status.online)
+
+
+# Event handler for when a message is sent in a channel the bot can access
+@bot.event
+@commands.cooldown(1, 2,
+                   commands.BucketType.user)  # Cooldown, per 1 user 2 seconds
+async def on_message(message):
+  if message.author.bot:
+    return
+
+  # Check if the message contains the bot's hardcoded prefix
+  if 'put your bot's name here' in message.content.lower():
+    try:
+      # Set typing status
+      async with message.channel.typing():
+
+        # Generate response
+        response = openai.ChatCompletion.create(
+          model="gpt-3.5-turbo",
+          messages=[{
+            "role": "system",
+            "content": personality
+          }, {
+            "role":
+            "assistant",
+            "content":
+            "Here are past messages to you for context:" +
+            "\n\n".join(chatHistory)
+          }, {
+            "role": "user",
+            "content": message.content
+          }],
+          temperature=0.65,
+          max_tokens=275,
+        )
+
+        # Set typing response time
+        response_length = len(response.choices[0].message.content)
+        typing_time = min(2, max(0.15, round(response_length * 0.0013)))
+        await asyncio.sleep(typing_time)
+
+      # Send the response back to Discord
+      await message.channel.send(response.choices[0].message.content)
+
+      # Append to chat log, up to 5 messages
+      if len(chatHistory) > 5:
+        chatHistory.pop(0)
+      chatHistory.append(message.content)
+
+      # Better Context Awareness but more token demanding, implementation is optional
+      '''chatHistory.append(f"User {message.author} asks: '{message.content}'\n"
+                         f"Your response was: '{response.choices[0].message.content}'")'''
+
+      # Send the log message to a discord webhook, this way chat log is private
+      webhook_url = 'put webhook url here'
+      webhook_content = (
+        f"**{message.author}:** {message.content}\n"  # User message
+        f"**Roka:** {response.choices[0].message.content}\n"  # Response
+        f"**Tokens:** {str(response['usage']['total_tokens'])}\n---"  # Token usage
+      )
+      webhook = DiscordWebhook(url=webhook_url, content=webhook_content)
+      response = webhook.execute()
+
+    # Exception Handler
+    except Exception as e:
+      print(f"Error: {e}")
+      await message.channel.send(
+        "put error message here")
+
+
+# Start the bot by logging in with the provided bot key
+bot.run(os.environ.get('DISCORD_BOT_KEY'))
