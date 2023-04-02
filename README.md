@@ -1,6 +1,9 @@
 # CustomDiscordAIChatbot by Rokawoo https://rokawoo.neocities.org/
 
 Instructions to set up your bot:
+
+Pre-rec: Install all libraries with 'pip install discord openai asyncio discord-webhook'
+
 1.) Download the chatBot code, then open it in an editor.
 
 2.) Find line 13, input your bot's personality string, this will be fed to the OpenAI api's role, for example you can put "You are to play the role of..." and add
