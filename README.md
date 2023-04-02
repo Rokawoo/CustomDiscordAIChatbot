@@ -24,6 +24,7 @@ any other information, creating a good personality string is crucial to your bot
 You are now ready to run the bot, make sure the bot is in your server, it will be able to talk in any text channel it has access to, say its name. Enjoy!
 You may run the bot by hosting it locally or on replit. Here is my replit for example: https://replit.com/@RokaAwoo/Roka
 
+
 OPTIONAL:
 On line 83 you can change the bot's past message memory, by default it only saves what is asked of it by a user.
 
