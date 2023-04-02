@@ -2,7 +2,6 @@
 #Author: Rokawoo Woof
 #Last Updated: 3/20/2023
 
-import os
 import discord
 import openai
 import asyncio
@@ -106,4 +105,4 @@ async def on_message(message):
 
 
 # Start the bot by logging in with the provided bot key
-bot.run('put your discord bot secret key here')
+bot.run("put your discord bot secret key here")
