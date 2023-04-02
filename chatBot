@@ -16,9 +16,9 @@ personality = '''put desired personality here'''
 intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True  # Explicitly enable the message content intents
-bot = commands.Bot(command_prefix='', intents=intents)
+bot = commands.Bot(command_prefix="", intents=intents)
 
-openai.api_key = 'put your openAI api key here'  # Set up the OpenAI API key
+openai.api_key = "put your openAI api key here"  # Set up the OpenAI API key
 
 chatHistory = []
 
@@ -26,7 +26,7 @@ chatHistory = []
 # Event handler for when the bot connects to Discord
 @bot.event
 async def on_ready():
-  print(f'{bot.user} has connected to Discord!')
+  print(f"{bot.user} has connected to Discord!")
 
   # Set the bot's status
   activity = discord.Activity(
@@ -46,7 +46,7 @@ async def on_message(message):
     return
 
   # Check if the message contains the bot's hardcoded prefix
-  if 'put your bot's name here' in message.content.lower():
+  if "put your bot's name here" in message.content.lower():
     try:
       # Set typing status
       async with message.channel.typing():
@@ -89,11 +89,11 @@ async def on_message(message):
                          f"Your response was: '{response.choices[0].message.content}'")'''
 
       # Send the log message to a discord webhook, this way chat log is private
-      webhook_url = 'put webhook url here'
+      webhook_url = "put discord webhook url here"
       webhook_content = (
         f"**{message.author}:** {message.content}\n"  # User message
         f"**Roka:** {response.choices[0].message.content}\n"  # Response
-        f"**Tokens:** {str(response['usage']['total_tokens'])}\n---"  # Token usage
+        f"**Tokens:** {str(response["usage"]["total_tokens"])}\n---"  # Token usage
       )
       webhook = DiscordWebhook(url=webhook_url, content=webhook_content)
       response = webhook.execute()
@@ -106,4 +106,4 @@ async def on_message(message):
 
 
 # Start the bot by logging in with the provided bot key
-bot.run(os.environ.get('DISCORD_BOT_KEY'))
+bot.run('put your discord bot secret key here')
