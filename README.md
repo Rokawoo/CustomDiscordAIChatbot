@@ -26,6 +26,7 @@ You may run the bot by hosting it locally or on replit. Here is my replit for ex
 
 
 OPTIONAL:
+
 On line 83 you can change the bot's past message memory, by default it only saves what is asked of it by a user.
 
 You may replace line 85 with the contents of line 87 to 89 for better context awareness, it will addtionally save its own responses.
